@@ -45,7 +45,7 @@ def adicionar_item(novo_item: Item, outro_item: Item):  # aqui vamos colocar com
     return [novo_item, outro_item]  # retornamos o resultado de "Item", ou os resultados
 
 
-# para iniciar o programa: uvicorn main:app --reload
+# para iniciar o programa: uvicorn ex01:app --reload
 # o "--reload" serve para dar auto reload serve para qualquer auteração do codigo ele recarrega automaticamente
 # se você mudar o arquivo de "main" para outro é só mudar na execução: uvicorn principal:app --reload
 # para acessor o swagger do enderesso basta um /docs: http://127.0.0.1:8000/docs
