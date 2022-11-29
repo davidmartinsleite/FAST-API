@@ -4,15 +4,18 @@ from modelos.papel import Papel
 
 rota = APIRouter()  # isso cria uma rota para a criação do @app que já foi criado no main
 
-banco_de_dados = []
 
 
+# NOTA: esse banco de dados e feito de forma assincrona então vamos adiconar o "async"
 @rota.post('/')
-def adicionar_papel(item: Papel):
-    banco_de_dados.append(item)
-    return item
+async def adicionar_papel(papel: Papel):
+    await papel.save()
+    # o ORM vai ser assincrono, então preciso que ele espere a operação do ORM
+    # terminar e que ele me retorne o resultado para continuar nessa função
+    return papel
 
 
 @rota.get('/')
-def listar_papeis():
-    return banco_de_dados
+async def listar_papeis():
+    return await Papel.objects.all()
+
