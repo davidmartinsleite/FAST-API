@@ -4,7 +4,7 @@ from rotas import rota
 
 app = FastAPI()
 
-@app.get('/')
+@rota.get('/')
 def get_root():
     return {'mensagem': 'api de papeis'}
 

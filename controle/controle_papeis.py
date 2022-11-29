@@ -1,5 +1,7 @@
-from fastapi import APIRouter
+import ormar.exceptions
+from fastapi import APIRouter, Response
 from modelos.papel import Papel
+
 
 
 rota = APIRouter()  # isso cria uma rota para a criação do @app que já foi criado no main
@@ -19,3 +21,11 @@ async def adicionar_papel(papel: Papel):
 async def listar_papeis():
     return await Papel.objects.all()
 
+@rota.get('/{papel_id}')
+async def get_papel(pael_id: int, response: Response):
+    try:
+        papel = await Papel.objects.get(id=pael_id)
+        return papel
+    except ormar.exceptions.NoMatch:
+        response.status_code = 404
+        return {'mesagem': 'entidade não encontrada'}
