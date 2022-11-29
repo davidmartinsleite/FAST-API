@@ -4,6 +4,11 @@ from rotas import rota
 
 app = FastAPI()
 
+@app.get('/')
+def get_root():
+    return {'mensagem': 'api de papeis'}
+
+
 app.include_router(rota, prefix='')
 
 # uvicorn main:app --reload
