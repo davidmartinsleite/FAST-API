@@ -39,3 +39,13 @@ async def patch_papel(propriedades_atualizacao: AtualizarPapel, papel_id: int, r
     except ormar.exceptions.NoMatch:
         response.status_code = 404
         return {'mensagem': 'Entidade não encontrada'}
+
+
+@rota.delete('/{papel_id}')
+async def degeletar_papel(papel_id: int, response: Response):
+    try:
+        papel = await Papel.objects.get(id=papel_id)
+        return await papel.delete()
+    except ormar.exceptions.NoMatch:
+        response.status_code = 404
+        return {'mesagem': 'entendade não encotrada'}
