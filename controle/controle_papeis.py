@@ -1,8 +1,7 @@
 import ormar.exceptions
 from fastapi import APIRouter, Response
 from modelos.papel import Papel
-
-
+from modelos.solicitacoes.atualiza_papel import AtualizarPapel
 
 rota = APIRouter()  # isso cria uma rota para a criação do @app que já foi criado no main
 
@@ -29,3 +28,14 @@ async def get_papel(pael_id: int, response: Response):
     except ormar.exceptions.NoMatch:
         response.status_code = 404
         return {'mesagem': 'entidade não encontrada'}
+
+@rota.patch('/{papel_id}')
+async def patch_papel(propriedades_atualizacao: AtualizarPapel, papel_id: int, response: Response):
+    try:
+        papel_salvo = await Papel.objects.get(id=papel_id)
+        propriedades_atualizadas = propriedades_atualizacao.dict(exclude_unset=True)
+        await papel_salvo.update(**propriedades_atualizadas)
+        return papel_salvo
+    except ormar.exceptions.NoMatch:
+        response.status_code = 404
+        return {'mensagem': 'Entidade não encontrada'}
