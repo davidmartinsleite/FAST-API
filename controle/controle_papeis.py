@@ -1,44 +1,48 @@
 from fastapi import APIRouter
 import ormar
-from controle.uteis.entidade_nao_encontrada import entidade_nao_encontrada
+
+from controle.uteis.adicionar_controle import adicionar_controle
+from controle.uteis.modificar_controle import modificar_controle
+from controle.uteis.pegar_controle import pegar_controle
+from controle.uteis.pegar_tudo_controle import pegar_tudo_controle
 from modelos.papel import Papel
 from modelos.solicitacoes.atualiza_papel import AtualizarPapel
+from controle.uteis.entidade_nao_encontrada import entidade_nao_encontrada
+from controle.uteis.deletar_controle import deletar_controle
 
 rota = APIRouter()  # isso cria uma rota para a criação do @app que já foi criado no main
 
 
 
 # NOTA: esse banco de dados e feito de forma assincrona então vamos adiconar o "async"
+
+
 @rota.post('/')
-async def adicionar_papel(papel: Papel):
-    await papel.save()
-    # o ORM vai ser assincrono, então preciso que ele espere a operação do ORM
-    # terminar e que ele me retorne o resultado para continuar nessa função
-    return papel
+@adicionar_controle  # esse aqui não passamos papel como parametro
+async def adicionar_papel(entidade: Papel):
+    pass
 
 
 @rota.get('/')
+@pegar_tudo_controle(Papel)
 async def listar_papeis():
-    return await Papel.objects.all()
-
-@rota.get('/{papel_id}')
-@entidade_nao_encontrada  # ele vai encapsular esse dado recebido do .get logo acima e fazer um tratamento
-async def get_papel(pael_id: int):
-    papel = await Papel.objects.get(id=pael_id)
-    return papel
+    pass
 
 
-@rota.patch('/{papel_id}')
+@rota.get('/{id}')
 @entidade_nao_encontrada
-async def patch_papel(propriedades_atualizacao: AtualizarPapel, papel_id: int):
-    papel_salvo = await Papel.objects.get(id=papel_id)
-    propriedades_atualizadas = propriedades_atualizacao.dict(exclude_unset=True)
-    await papel_salvo.update(**propriedades_atualizadas)
-    return papel_salvo
+@pegar_controle(Papel)
+async def pegar_papel(id: int):
+    pass
 
 
-@rota.delete('/{papel_id}')
-@entidade_nao_encontrada
-async def degeletar_papel(papel_id: int):
-    papel = await Papel.objects.get(id=papel_id)
-    return await papel.delete()
+@rota.patch('/{id}')
+@modificar_controle(Papel)
+async def modificar_papel(propriedades_atualizacao: AtualizarPapel, id: int):
+    pass
+
+
+@rota.delete('/{id}')
+@deletar_controle(Papel)  # a entidade que ele está trabalhando é Papel, lá da pasta solicitacoes
+async def deletar_papel(id: int):
+    pass
