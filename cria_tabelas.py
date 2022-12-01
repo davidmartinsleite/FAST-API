@@ -1,8 +1,7 @@
 # esse script vai criar o modelo databela que vamos precisar
 import sqlalchemy
 from config import DATABASE_URL, metadata
-from modelos.papel import Papel
-
+import modelos.importacoes_de_modelos
 
 def configurar_banco(database_url = DATABASE_URL):
     # essa função vai criar as tabelas no banco, so vamos criar um parametro
