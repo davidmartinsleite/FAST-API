@@ -1,5 +1,6 @@
-import ormar.exceptions
-from fastapi import APIRouter, Response
+from fastapi import APIRouter
+import ormar
+from controle.uteis.entidade_nao_encontrada import entidade_nao_encontrada
 from modelos.papel import Papel
 from modelos.solicitacoes.atualiza_papel import AtualizarPapel
 
@@ -21,31 +22,23 @@ async def listar_papeis():
     return await Papel.objects.all()
 
 @rota.get('/{papel_id}')
-async def get_papel(pael_id: int, response: Response):
-    try:
-        papel = await Papel.objects.get(id=pael_id)
-        return papel
-    except ormar.exceptions.NoMatch:
-        response.status_code = 404
-        return {'mesagem': 'entidade não encontrada'}
+@entidade_nao_encontrada  # ele vai encapsular esse dado recebido do .get logo acima e fazer um tratamento
+async def get_papel(pael_id: int):
+    papel = await Papel.objects.get(id=pael_id)
+    return papel
+
 
 @rota.patch('/{papel_id}')
-async def patch_papel(propriedades_atualizacao: AtualizarPapel, papel_id: int, response: Response):
-    try:
-        papel_salvo = await Papel.objects.get(id=papel_id)
-        propriedades_atualizadas = propriedades_atualizacao.dict(exclude_unset=True)
-        await papel_salvo.update(**propriedades_atualizadas)
-        return papel_salvo
-    except ormar.exceptions.NoMatch:
-        response.status_code = 404
-        return {'mensagem': 'Entidade não encontrada'}
+@entidade_nao_encontrada
+async def patch_papel(propriedades_atualizacao: AtualizarPapel, papel_id: int):
+    papel_salvo = await Papel.objects.get(id=papel_id)
+    propriedades_atualizadas = propriedades_atualizacao.dict(exclude_unset=True)
+    await papel_salvo.update(**propriedades_atualizadas)
+    return papel_salvo
 
 
 @rota.delete('/{papel_id}')
-async def degeletar_papel(papel_id: int, response: Response):
-    try:
-        papel = await Papel.objects.get(id=papel_id)
-        return await papel.delete()
-    except ormar.exceptions.NoMatch:
-        response.status_code = 404
-        return {'mesagem': 'entendade não encotrada'}
+@entidade_nao_encontrada
+async def degeletar_papel(papel_id: int):
+    papel = await Papel.objects.get(id=papel_id)
+    return await papel.delete()
