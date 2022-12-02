@@ -3,6 +3,7 @@ import sqlalchemy
 from config import DATABASE_URL, metadata
 import modelos.importacoes_de_modelos
 
+
 def configurar_banco(database_url = DATABASE_URL):
     # essa função vai criar as tabelas no banco, so vamos criar um parametro
     print(database_url)

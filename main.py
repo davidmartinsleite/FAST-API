@@ -4,8 +4,8 @@ from rotas import rota
 
 app = FastAPI()
 
-@rota.get('/')
-async def pegar_rota():
+@app.get('/')
+def pegar_rota():
     return {'mensagem': 'api de papeis'}
 
 
