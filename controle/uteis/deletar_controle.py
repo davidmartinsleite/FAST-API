@@ -11,7 +11,7 @@ def deletar_controle(modelo: ormar.Model):
         # NOTA: nós tiramos essa parte do "controle_papeis" e encapsulamos tudo de uma só vez
         @wraps(func)
         # a função do controle é assincrona, aqui vamos colocar tudo para termos genericos
-        async def wrapper(id: int):
+        async def wrapper(id: int, **kwargs):  # "**kwargs" ele vai servir para receber parametros multiplos
             entidade = await modelo.objects.get(id=id)  # aqui ele vai receber o objeto com seus elementos
             return await entidade.delete()  # e aqui ele vai deletar esses elementos
         return wrapper  # aqui só retorna a função
